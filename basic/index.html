@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WASM Test</title>
+    <style>
+        body { font-family: sans-serif; background: #1c2128; color: white; text-align: center; padding: 50px; }
+        .result-box { font-size: 2rem; color: #44d663; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>WebAssembly Calculation</h1>
+    <div id="out" class="result-box">Loading WASM...</div>
+
+    <script>
+        // Check if the browser supports WebAssembly
+        if (!window.WebAssembly) {
+            alert("WASM is not supported in this browser!");
+        }
+
+        // Define a simpler way to load WASM without Emscripten's glue code
+        // (For a truly 'basic' understanding of how the browser sees WASM)
+        WebAssembly.instantiateStreaming(fetch('math.wasm'))
+            .then(obj => {
+                const sum = obj.instance.exports.add_numbers(15, 25);
+                document.getElementById('out').innerText = "15 + 25 = " + sum;
+            })
+            .catch(err => {
+                document.getElementById('out').innerText = "Error loading WASM";
+                console.error(err);
+            });
+    </script>
+</body>
+</html>
